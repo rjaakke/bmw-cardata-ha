@@ -22,6 +22,7 @@ from homeassistant.const import UnitOfLength
 from .const import DOMAIN
 from .coordinator import CardataCoordinator
 from .entity import CardataEntity
+from .descriptor_icons import icon_for_descriptor
 
 
 class CardataSensor(CardataEntity, SensorEntity):
@@ -29,6 +30,7 @@ class CardataSensor(CardataEntity, SensorEntity):
         super().__init__(coordinator, vin, descriptor)
         self._attr_should_poll = False
         self._unsubscribe = None
+        self._attr_icon = icon_for_descriptor(descriptor)
         if self._descriptor == "vehicle.vehicle.travelledDistance":
             self._attr_state_class = SensorStateClass.TOTAL_INCREASING
     
@@ -101,13 +103,16 @@ class CardataDiagnosticsSensor(SensorEntity, RestoreEntity):
             suffix = "last_message"
             self._attr_name = "Last Message Received"
             self._attr_device_class = SensorDeviceClass.TIMESTAMP
+            self._attr_icon = "mdi:clock-check"
         elif sensor_type == "last_telematic_api":
             suffix = "last_telematic_api"
             self._attr_name = "Last Telematics API Call"
             self._attr_device_class = SensorDeviceClass.TIMESTAMP
+            self._attr_icon = "mdi:cloud-refresh"
         elif sensor_type == "connection_status":
             suffix = "connection_status"
             self._attr_name = "Stream Connection Status"
+            self._attr_icon = "mdi:access-point-network"
         else:
             suffix = sensor_type
             self._attr_name = sensor_type
